@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Game;
+use App\Models\Review;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +13,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create some good games
+        Game::factory(33)->create()->each(function($book) {
+            $numberOfReviews = random_int(5, 30);
+            Review::factory()
+                ->count($numberOfReviews)
+                ->good()
+                ->for($book)
+                ->create();
+        });
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Create some avergae games
+        Game::factory(42)->create()->each(function($book) {
+            $numberOfReviews = random_int(5, 30);
+            Review::factory()
+                ->count($numberOfReviews)
+                ->average()
+                ->for($book)
+                ->create();
+        });
+
+        // Create some bad games
+        Game::factory(16)->create()->each(function($book) {
+            $numberOfReviews = random_int(5, 30);
+            Review::factory()
+                ->count($numberOfReviews)
+                ->bad()
+                ->for($book)
+                ->create();
+        });
     }
 }
