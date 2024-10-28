@@ -3,12 +3,34 @@
 @section('content')
     <h1 class="font-semibold text-2xl relative inline-block mb-8 before:content-[''] before:absolute before:w-2/3 before:h-2/3 before:bg-violet-200 before:top-2.5 before:-left-2 before:-z-10">All game reviews</h1>
 
-    <form method="GET" action="{{ route('games.index') }}" class="mb-10 w-2/3">
+    <form method="GET" action="{{ route('games.index') }}" class="mb-5 w-2/3">
         <div class="w-full flex">
             <input class="border-2 border-black flex-grow max-w-full mr-3 px-2 py-1" type="text" name="title" placeholder="Search by title" value="{{ request('title') }}" />
+            <input type="hidden" name="filter" value="{{ request('filter') }}" />
             <button class="text-lg hover:underline hover:font-semibold" type="submit">Search</button>
         </div>
     </form>
+
+    <div class="mb-10">
+        @php
+            $filters = [
+                '' => 'Latest',
+                'popular_last_month' => 'Popular last month',
+                'popular_last_6_months' => 'Popular last 6 months',
+                'highest_rated_last_month' => 'Highest rated last month',
+                'highest_rated_last_6_months' => 'Highest rated last 6 months'
+            ];
+        @endphp
+        <ul>
+            @foreach ($filters as $key => $label)
+                <li>
+                    <a class="hover:font-semibold {{ request('filter') === $key || (request('filter') === null && $key === '') ? 'font-semibold' : '' }}" href="{{ route('games.index', [...request()->query(), 'filter' => $key]) }}">
+                        {{ request('filter') === $key || (request('filter') === null && $key === '') ? 'x' : 'o' }} {{ $label }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 
     <ul>
         @forelse ($games as $game)
