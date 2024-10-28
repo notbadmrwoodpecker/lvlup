@@ -16,11 +16,13 @@ class GameFactory extends Factory
      */
     public function definition(): array
     {
+        $created_at = fake()->dateTimeBetween('-2 years');
+
         return [
             'title' => fake()->sentence(3),
             'publisher' => fake()->company(),
-            'created_at' => fake()->dateTimeBetween('-2 years'),
-            'updated_at' => fake()->dateTimeBetween('created_at', 'now')
+            'created_at' => $created_at,
+            'updated_at' => fake()->dateTimeBetween($created_at, 'now')
         ];
     }
 }

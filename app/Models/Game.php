@@ -15,7 +15,6 @@ class Game extends Model
     }
 
     public function scopeTitle(Builder $query, string $title): Builder {
-
         return $query->where('title', 'LIKE', '%' . $title . '%');
     }
 }
