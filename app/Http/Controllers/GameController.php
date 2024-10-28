@@ -13,7 +13,7 @@ class GameController extends Controller
     public function index(Request $request)
     {
         $title = $request->input('title');
-        $games = Game::when($title, fn($query) => $query->title($title))->get();
+        $games = Game::when($title, fn($query) => $query->title($title))->withCount('reviews')->get();
 
         return view('games.index', ['games' => $games]);
     }
