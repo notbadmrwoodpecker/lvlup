@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -9,9 +10,12 @@ class GameController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $title = $request->input('title');
+        $games = Game::when($title, fn($query) => $query->title($title))->get();
+
+        return view('games.index', ['games' => $games]);
     }
 
     /**
