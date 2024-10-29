@@ -20,7 +20,7 @@ class Review extends Model
      * @param string|null $from from date for created_at of reviews
      * @param string|null $to to date for created_at of reviews
      */
-    private function scopeFilterByDateRange(Builder $query, string $from, string $to) {
+    public function scopeFilterByDateRange(Builder $query, ?string $from = null, ?string $to = null) {
         if (!$from && !$to) {
             return;
         }

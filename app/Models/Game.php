@@ -47,4 +47,32 @@ class Game extends Model
     public function scopeMinimumReviews(Builder $query, int $minimumAmountOfReviews): Builder {
         return $query->having('reviews_count', '>=', $minimumAmountOfReviews);
     }
+
+    public function scopePopularLastMonth(Builder $query): Builder {
+        $to = now();
+        $from = now()->subMonthNoOverflow(1);
+
+        return $query->popular($from, $to)->highestRated($from, $to)->minimumReviews(2);
+    }
+
+    public function scopePopularLast6Months(Builder $query): Builder {
+        $to = now();
+        $from = now()->subMonthNoOverflow(6);
+
+        return $query->popular($from, $to)->highestRated($from, $to)->minimumReviews(5);
+    }
+
+    public function scopeHighestRatedLastMonth(Builder $query): Builder {
+        $to = now();
+        $from = now()->subMonthNoOverflow();
+
+        return $query->highestRated($from, $to)->popular($from, $to)->minimumReviews(2);
+    }
+
+    public function scopeHighestRatedLast6Months(Builder $query): Builder {
+        $to = now();
+        $from = now()->subMonthNoOverflow(6);
+
+        return $query->highestRated($from, $to)->popular($from, $to)->minimumReviews(5);
+    }
 }

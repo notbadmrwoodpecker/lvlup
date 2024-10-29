@@ -13,7 +13,20 @@ class GameController extends Controller
     public function index(Request $request)
     {
         $title = $request->input('title');
-        $games = Game::when($title, fn($query) => $query->title($title))->withCount('reviews')->get();
+        $filter = $request->input('filter', '');
+
+        $gamesQuery = Game::
+            when($title, fn($query) => $query->title($title));
+
+        $gamesQuery = match($filter) {
+            'popular_last_month' => $gamesQuery->popularLastMonth(),
+            'popular_last_6_months' => $gamesQuery->popularLast6Months(),
+            'highest_rated_last_month' => $gamesQuery->highestRatedLastMonth(),
+            'highest_rated_last_6_months' => $gamesQuery->highestRatedLast6Months(),
+            default => $gamesQuery->withCount('reviews')->withAvg('reviews', 'rating')->latest()
+        };
+
+        $games = $gamesQuery->get();
 
         return view('games.index', ['games' => $games]);
     }

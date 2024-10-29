@@ -25,7 +25,7 @@
             @foreach ($filters as $key => $label)
                 <li>
                     <a class="hover:font-semibold {{ request('filter') === $key || (request('filter') === null && $key === '') ? 'font-semibold' : '' }}" href="{{ route('games.index', [...request()->query(), 'filter' => $key]) }}">
-                        {{ request('filter') === $key || (request('filter') === null && $key === '') ? 'x' : 'o' }} {{ $label }}
+                        {{ request('filter') === $key || (request('filter') === null && $key === '') ? 'x' : 'o' }} <span class="hover:underline">{{ $label }}</span>
                     </a>
                 </li>
             @endforeach
@@ -43,10 +43,21 @@
                         <p class="text-sm">Published by <span class="italic">{{ $game->publisher }}</span></p>
                     </div>
                     <div class="w-1/4 h-100 ml-auto -my-2 -mx-3 border-l-2 border-black px-2 py-3 flex-shrink-0 flex flex-col justify-center items-center">
-                        <p class="text-4xl font-black">
-                            @for($i = 0; $i < $game->reviews_avg_rating; $i++)
-                                *
-                            @endfor
+                        @php
+                            $rating = floor($game->reviews_avg_rating);
+                            $rating_remainderTo5 = 5 - $rating;
+                        @endphp
+                        <p class="text-2xl font-black">
+                            <span class="text-yellow-500">
+                                @for($i = 0; $i < $rating; $i++)
+                                    *
+                                @endfor
+                            </span>
+                            <span class="text-gray-500">
+                                @for($i = 0; $i < $rating_remainderTo5; $i++)
+                                    *
+                                @endfor
+                            </span>
                         </p>
                         <p class="text-sm">out of {{ $game->reviews_count }} {{ Str::plural('review', $game->review_count) }}</p>
                     </div>
